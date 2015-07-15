@@ -21,7 +21,7 @@
 -- is moved to a new WiFi it's still possible to telnet
 -- into it and set new WiFi credentials.
 -- The device will show as NodeXXXX, connect to the AP
--- telnet 192.168.1.4 and use:
+-- telnet 192.168.4.1 and use:
 --  wifi.sta.config("SSID","PASSWORD")
 -- to configure a new WiFi.
 wifi.setmode(wifi.STATIONAP)
