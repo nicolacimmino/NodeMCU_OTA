@@ -21,6 +21,9 @@ a command path like:
 
     "C:\NodeMCU_OTA\NodeMCU_OTA\bin\Debug\NodeMCU_OTA.exe" "$(FULL_CURRENT_PATH)"
 
+Below a proto running the server receiving the OTA updates.
+
+![Proto](documentation/proto.jpg)
 TODO list:
 
 * refactor code, this is just a dirty hack to prove the concept
