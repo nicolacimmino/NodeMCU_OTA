@@ -1,3 +1,5 @@
+--@otaIP 192.168.1.79
+--
 -- Firmware for ESP8266 OTA Server.
 --  Copyright (C) 2015 Nicola Cimmino
 

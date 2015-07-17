@@ -30,14 +30,16 @@ namespace NodeMCU_OTA
         {
             List<String> processedCode = new List<String>();
 
-            foreach (String line in lines)
+            foreach (String rawLine in lines)
             {
-                if (line.StartsWith("--@"))
+                String line = rawLine.Trim().Trim('\t');
+
+                if (line.StartsWith("--"))
                 {
                     continue;
                 }
 
-                if (line.Trim() == "")
+                if (line == "")
                 {
                     continue;
                 }

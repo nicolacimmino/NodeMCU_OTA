@@ -31,8 +31,10 @@ namespace NodeMCU_OTA
 
         public void Parse(List<String> lines)
         {
-            foreach(String line in lines)
+            foreach(String rawLine in lines)
             {
+                String line = rawLine.Trim().Trim('\t');
+
                 if(!line.StartsWith("--@"))
                 {
                     continue;

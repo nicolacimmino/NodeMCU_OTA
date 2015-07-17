@@ -1,3 +1,5 @@
+--@otaIP 192.168.1.79
+--
 -- Firmware for ESP8266 OTA Server.
 --  Copyright (C) 2015 Nicola Cimmino
 
@@ -55,5 +57,8 @@ function shutdown()
 end
 
 -- Watchdog, if nothing happens (ie no remote connection)
--- shuthdown after 2 minutes to preserve battery.
+-- shuth down after 2 minutes to preserve battery.
 tmr.alarm(0, 120000, 0, function() shutdown() end)
+
+-- By default always shut down when a remote disconnects.
+shutdownOnDisconnect=true

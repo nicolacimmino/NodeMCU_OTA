@@ -32,7 +32,9 @@ namespace NodeMCU_OTA
     {
         static void Main(string[] args)
         {
-            StreamReader inFile = new StreamReader(args[0]);
+            String inputFile = args[0];
+
+            StreamReader inFile = new StreamReader(inputFile);
             String fileContent = inFile.ReadToEnd();
             inFile.Close();
             List<String> lines = new List<String>(fileContent.Split('\n'));
@@ -42,34 +44,28 @@ namespace NodeMCU_OTA
 
             CodeBody codeBody = new CodeBody();
             codeBody.Parse(lines);
-            codeBody.Prepare(lines, preprop.OtaDestination);
-
-            foreach(String line in lines)
-            {
-                Console.WriteLine(line);
-            }
-            Console.WriteLine(preprop.OtaIP);
-
-            String toSend = String.Join("\r\n", lines);
-            byte[] bytesToSend = System.Text.Encoding.UTF8.GetBytes(toSend);
+            codeBody.Prepare(lines, preprop.OtaDestination??Path.GetFileName(inputFile));
 
             TcpClient tcpClient = new TcpClient();
-            IPAddress ipAddress = Dns.GetHostAddresses(preprop.OtaIP)[0];
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, 23);
-            tcpClient.Connect(ipEndPoint);
+            tcpClient.Connect(preprop.OtaIP, 23);
+            Stream stream = tcpClient.GetStream();
 
-            TextWriter output = new StreamWriter(tcpClient.GetStream());
-            //tcpClient.GetStream().Write(bytesToSend, 0, bytesToSend.Length);
             foreach(String line in lines)
             {
                 Console.WriteLine(line);
-                output.Write(line + "\n");
-               Thread.Sleep(1000);  
+                var buf = Encoding.ASCII.GetBytes(line + "\r\n");
+                stream.Write(buf, 0, buf.Length);
+
+                int read = 0;
+                while(read != (int)'>')
+                {
+                    read = stream.ReadByte();
+                    Console.Write((char)read);
+                }
             }
-            Thread.Sleep(5000); 
             tcpClient.Close();
             Console.WriteLine("Ready");
-            Console.ReadKey();
+            Thread.Sleep(2000);
         }
     }
 }
