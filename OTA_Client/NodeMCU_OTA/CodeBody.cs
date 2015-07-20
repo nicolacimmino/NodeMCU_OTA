@@ -60,7 +60,7 @@ namespace NodeMCU_OTA
 
             foreach (String line in lines)
             {
-                String processedLine = line.Replace("\"", "\\\"");
+                String processedLine = line.Replace("\\", "\\\\").Replace("\"", "\\\"");
                 processedLine = "file.writeline(\"" + processedLine + "\")";
                 processedCode.Add(processedLine);
             }
