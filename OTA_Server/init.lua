@@ -49,6 +49,9 @@ dofile("display.lua")
 -- OTA utility to send up the new files.
 dofile("telnet.lua")
 
+-- A set of useful command line commands.
+dofile("cli.lua")
+
 -- Bring down the ESP to deep sleep.
 function shutdown()
   tmr.stop(0)
