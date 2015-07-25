@@ -1,4 +1,4 @@
---@otaIP 192.168.1.79
+--@otaIP 192.168.1.80
 --
 -- Firmware for ESP8266 OTA Server.
 --  Copyright (C) 2015 Nicola Cimmino
@@ -38,4 +38,14 @@ function ls()
   for name,size in pairs(files) do
     print(name.."\t\t"..size)
   end
+end
+
+function ledon()
+  gpio.mode(4, gpio.OUTPUT)
+  gpio.write(4, gpio.HIGH)
+end
+
+function ledoff()
+  gpio.mode(4, gpio.OUTPUT)
+  gpio.write(4, gpio.LOW)
 end
