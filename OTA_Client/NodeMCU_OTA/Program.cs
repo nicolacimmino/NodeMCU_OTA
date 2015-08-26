@@ -44,7 +44,8 @@ namespace NodeMCU_OTA
 
             CodeBody codeBody = new CodeBody();
             codeBody.Parse(lines);
-            codeBody.Prepare(lines, preprop.OtaDestination??Path.GetFileName(inputFile));
+            String destinationFile = preprop.OtaDestination??Path.GetFileName(inputFile);
+            codeBody.Prepare(lines, destinationFile);
 
             TcpClient tcpClient = new TcpClient();
             tcpClient.Connect(preprop.OtaIP, 23);
@@ -52,7 +53,23 @@ namespace NodeMCU_OTA
 
             foreach(String line in lines)
             {
-                Console.WriteLine(line);
+                sendCommand(stream, line);
+            }
+
+            if(preprop.Compile)
+            {
+                sendCommand(stream, "node.compile(\"" + destinationFile + "\")");
+                sendCommand(stream, "file.remove(\"" + destinationFile + "\")");
+            }
+
+            tcpClient.Close();
+            Console.WriteLine("Ready");
+            Thread.Sleep(2000);
+        }
+
+        private static void sendCommand(Stream stream, String line)
+        {
+            Console.WriteLine(line);
                 var buf = Encoding.ASCII.GetBytes(line + "\r\n");
                 stream.Write(buf, 0, buf.Length);
 
@@ -62,10 +79,6 @@ namespace NodeMCU_OTA
                     read = stream.ReadByte();
                     Console.Write((char)read);
                 }
-            }
-            tcpClient.Close();
-            Console.WriteLine("Ready");
-            Thread.Sleep(2000);
         }
     }
 }

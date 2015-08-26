@@ -28,6 +28,7 @@ namespace NodeMCU_OTA
     {
         public String OtaIP { get; private set; }
         public String OtaDestination { get; private set; }
+        public bool Compile { get; private set; }
 
         public void Parse(List<String> lines)
         {
@@ -48,6 +49,11 @@ namespace NodeMCU_OTA
                 if (line.StartsWith("--@otaDestination"))
                 {
                     this.OtaDestination = line.Replace("--@otaDestination", "").Replace("\n","").Replace("\r","").Trim();
+                }
+
+                if (line.StartsWith("--@compile"))
+                {
+                    this.Compile = true;
                 }
             }
         }

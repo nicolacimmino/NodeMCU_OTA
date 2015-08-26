@@ -1,0 +1,9 @@
+
+GPIO  NodePin Function
+16    0       Button Yellow (no interrupt)
+14    5       SCL
+12    6       Button Blue
+13    7       SDA
+2     4       LED Red
+5     1       LED Green
+

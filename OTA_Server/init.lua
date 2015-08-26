@@ -1,4 +1,4 @@
---@otaIP 192.168.1.79
+--@otaIP 192.168.1.80
 --
 -- Firmware for ESP8266 OTA Server.
 --  Copyright (C) 2015 Nicola Cimmino
@@ -39,29 +39,34 @@ apConfig={}
 apConfig.ssid="Node" ..  math.random(99999)
 apConfig.pwd="mypassword"
 wifi.ap.config(apConfig)
-     
+
+-- Set config flags
+dofile("config.lua")
+
 -- If you have a ssd1306 display this will show vital
 -- information such as the AP name and current IP and status.
 -- If not comment this.
-dofile("display.lua")
+dofile("display.lc")
+
+dofile("cli.lc")
 
 -- The actual telnet server that will be contacted by the
 -- OTA utility to send up the new files.
-dofile("telnet.lua")
+dofile("telnet.lc")
 
 -- A set of useful command line commands.
-dofile("cli.lua")
+--dofile("user.lc")
+
 
 -- Bring down the ESP to deep sleep.
 function shutdown()
   tmr.stop(0)
-  disp:sleepOn() -- Broken encapsulation, display module should provide shutdown
+  disp:sleepOn() 
 	node.dsleep(0, nil)
 end
 
+
+
 -- Watchdog, if nothing happens (ie no remote connection)
 -- shuth down after 2 minutes to preserve battery.
-tmr.alarm(0, 120000, 0, function() shutdown() end)
-
--- By default always shut down when a remote disconnects.
-shutdownOnDisconnect=true
+--tmr.alarm(0, 120000, 0, function() shutdown() end)

@@ -1,4 +1,4 @@
---@otaIP 192.168.1.79
+--@otaIP 192.168.1.81
 --
 -- Firmware for ESP8266 OTA Server.
 --  Copyright (C) 2015 Nicola Cimmino
@@ -30,12 +30,12 @@ function startServer()
   server=net.createServer(net.TCP, 180)
   server:listen(23,   function(conn)
     tnetClient = true
-    tmr.stop(0) -- Prevent our watchdog to shut down the ESP while client connected.
-   
+    -- Prevent our watchdog to shut down the ESP while client connected.
+    tmr.stop(0) 
     -- Grab all client traffic and redirect it to node input
     conn:on("receive", function(conn, data)
       node.input(data)
-      tmr.wdclr() -- Prevent system watchdog resetting the device       
+      tmr.wdclr()        
     end)
     
     -- Redirect node output stream to the client
@@ -49,11 +49,12 @@ function startServer()
     -- When the client disconnects, shut down
     conn:on("disconnection",function(conn) 
        node.output(nil) 
+       tnetClient = false
        if shutdownOnDisconnect then
-        shutdown() -- We just shut down when client is gone
+        shutdown() 
        end
     end)
-  end) -- server:listen   
+  end) 
   
 end
  
