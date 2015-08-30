@@ -27,6 +27,7 @@ namespace NodeMCU_OTA
     class Preprocessor
     {
         public String OtaIP { get; private set; }
+        public String OtaCOM { get; private set; }  
         public String OtaDestination { get; private set; }
         public bool Compile { get; private set; }
 
@@ -44,6 +45,11 @@ namespace NodeMCU_OTA
                 if(line.StartsWith("--@otaIP"))
                 {
                     this.OtaIP = line.Replace("--@otaIP", "").Replace("\n", "").Replace("\r", "").Trim();
+                }
+
+                if (line.StartsWith("--@otaCOM"))
+                {
+                    this.OtaCOM = line.Replace("--@otaCOM", "").Replace("\n", "").Replace("\r", "").Trim();
                 }
 
                 if (line.StartsWith("--@otaDestination"))

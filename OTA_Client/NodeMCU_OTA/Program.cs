@@ -25,6 +25,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO.Ports;
 
 namespace NodeMCU_OTA
 {
@@ -47,9 +48,29 @@ namespace NodeMCU_OTA
             String destinationFile = preprop.OtaDestination??Path.GetFileName(inputFile);
             codeBody.Prepare(lines, destinationFile);
 
-            TcpClient tcpClient = new TcpClient();
-            tcpClient.Connect(preprop.OtaIP, 23);
-            Stream stream = tcpClient.GetStream();
+            Stream stream = null;
+
+            TcpClient tcpClient = null;
+            if (!String.IsNullOrEmpty(preprop.OtaIP))
+            {
+                tcpClient = new TcpClient();
+                tcpClient.Connect(preprop.OtaIP, 23);
+                stream = tcpClient.GetStream();
+            }
+
+            SerialPort serialPort = null;
+            if (!String.IsNullOrEmpty(preprop.OtaCOM))
+            {
+                serialPort = new SerialPort(preprop.OtaCOM);
+                serialPort.BaudRate = 9600;
+                serialPort.Open();
+                stream = serialPort.BaseStream;
+            }
+
+            if(stream == null)
+            {
+                return;
+            }
 
             foreach(String line in lines)
             {
@@ -62,7 +83,16 @@ namespace NodeMCU_OTA
                 sendCommand(stream, "file.remove(\"" + destinationFile + "\")");
             }
 
-            tcpClient.Close();
+            if (tcpClient != null)
+            {
+                tcpClient.Close();
+            }
+
+            if(serialPort != null)
+            {
+                serialPort.Close();
+            }
+
             Console.WriteLine("Ready");
             Thread.Sleep(2000);
         }
